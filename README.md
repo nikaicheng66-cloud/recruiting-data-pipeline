@@ -1,6 +1,6 @@
 # Recruiting Data Pipeline (Cloudflare D1)
 
-An applicant-tracking backend built on Cloudflare D1 (SQLite). The pipeline turns raw application-form exports and resume PDFs into a normalized candidate database. On top of that it runs ML scoring and a configurable recruitment-stage pipeline, from application through offer.
+Built during my data science internship at HireBeat: an applicant-tracking backend on Cloudflare D1 (SQLite). The pipeline turns raw application-form exports and resume PDFs into a normalized candidate database. On top of that it runs ML scoring and a configurable recruitment-stage pipeline, from application through offer.
 
 ## Notebooks
 
@@ -51,25 +51,28 @@ Database size after the full load:
 
 Notebook 4 runs in Google Colab. Add these Colab Secrets: `CLOUDFLARE_KEY` (API token), `CLOUDFLARE_ACCOUNT_ID` and `D1_DATABASE_ID`.
 
-The notebook expects this project folder on Google Drive:
+The repository mirrors the Google Drive project folder. Copy it to `/content/drive/MyDrive/recruiting-pipeline/` and add your own data under `datasets/`:
 
 ```
-/content/drive/MyDrive/recruiting-pipeline/
-├── create.sql
-├── drop.sql
+recruiting-pipeline/
+├── create.sql                          # full schema (81 tables + indexes)
+├── drop.sql                            # drops every table (irreversible)
+├── alter_dataset_type_contains_pii.sql # one-off migration run before raw ingestion
 ├── code/
-│   ├── resume_text_parser.py
-│   └── resume_skill_matcher.py
-└── datasets/
-    ├── linkedin_jobs_english.csv
-    ├── Language_Skills.csv
-    ├── Technical_Skills.csv
-    ├── Function_Skills.csv
-    └── <raw submission batch>.csv
+│   ├── resume_text_parser.py           # rule-based resume section parser
+│   ├── resume_skill_matcher.py         # matches resume text to the Skill table
+│   └── fetch_successful_submission_from_db.py
+├── datasets/
+│   ├── Language_Skills.csv             # skill dictionaries (committed)
+│   ├── Technical_Skills.csv
+│   ├── Function_Skills.csv
+│   ├── linkedin_jobs_english.csv       # from notebook 1 (not committed)
+│   └── <raw submission batch>.csv      # from notebook 3 (not committed)
+└── notebooks/
 ```
 
 ## Data and privacy
 
-No data files are committed. Application exports, resumes and every derived table contain real applicants' personal information, so cell outputs that showed candidate records have been cleared. Only aggregate outputs (counts, run summaries) remain.
+Only the three skill dictionaries are committed. Application exports, resumes and every derived table contain real applicants' personal information, so cell outputs that showed candidate records have been cleared. Only aggregate outputs (counts, run summaries) remain.
 
 Inline comments in notebook 4 are in Chinese.

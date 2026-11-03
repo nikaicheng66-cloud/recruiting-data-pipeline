@@ -1,6 +1,9 @@
 *.csv
+!datasets/Language_Skills.csv
+!datasets/Technical_Skills.csv
+!datasets/Function_Skills.csv
 *.pdf
-datasets/
+*.xlsx
 .env
 *.env
 __pycache__/
